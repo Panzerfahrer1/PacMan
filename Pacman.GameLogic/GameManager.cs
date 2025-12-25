@@ -8,5 +8,11 @@ namespace PacMan.Classes
 {
     internal class GameManager
     {
+        public Field[,] GameField { get; private set; }
+
+        public GameManager(Field[,] gameField)
+        {
+            GameField = gameField;
+        }
     }
 }

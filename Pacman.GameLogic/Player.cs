@@ -8,5 +8,6 @@ namespace PacMan.Classes
 {
     internal class Player
     {
+        
     }
 }

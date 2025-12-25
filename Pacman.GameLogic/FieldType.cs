@@ -12,5 +12,6 @@ namespace PacMan.Classes
         Wall,
         Pellet,
         PowerPellet,
+        Portal
     }
 }

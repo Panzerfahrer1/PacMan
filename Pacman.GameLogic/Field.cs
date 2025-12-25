@@ -8,6 +8,7 @@ namespace PacMan.Classes
 {
     internal class Field
     {
-       
+        public FieldType Type { get; private set; }
+        public int Points { get; private set; }
     }
 }
