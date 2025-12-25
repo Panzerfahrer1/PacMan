@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace PacMan.Classes
 {
-    internal enum FieldType
+    public enum FieldType
     {
         Empty,
         Wall,
         Pellet,
         PowerPellet,
-        Portal
+        Portal,
+        EnemySpawn
     }
 }

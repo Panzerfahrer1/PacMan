@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace PacMan.Classes
 {
-    internal class Field
+    public class Field
     {
         public FieldType Type { get; private set; }
+
         public int Points { get; private set; }
+
+        public Field(FieldType type, int points)
+        {
+            Type = type;
+            Points = points;
+        }
     }
 }
