@@ -8,9 +8,9 @@ namespace PacMan.Classes
 {
     public class Field
     {
-        public FieldType Type { get; private set; }
+        public FieldType Type { get; private set; } = FieldType.Pellet;
 
-        public int Points { get; private set; }
+        public int Points { get; private set; } = 30;
 
         public Field(FieldType type, int points)
         {

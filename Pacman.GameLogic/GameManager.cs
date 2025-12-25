@@ -12,23 +12,16 @@ namespace PacMan.Classes
             ValidatePlayer(player);
             GameField = gameField;
             ValidateGameField();
-            ValidatePlayerPosition();
             Player = player;
+            ValidatePlayerPosition();
         }
 
-        public void MovePlayer(Direction inputDirection)
+        public void Update()
         {
-            if(inputDirection == Direction.None)
-            {
-                inputDirection = Player.lastDirection;
-            }
-            else
-            {
-                Player.lastDirection = inputDirection;
-            }
+            var(dx, dy) = GetMovement(Player.Direction);
 
-            var (dx, dy) = GetMovement(inputDirection);
             MovePlayer(dx, dy);
+            AddPointsToPlayer(Player.CurrentXPosition, Player.CurrentYPosition);
         }
 
         private void MovePlayer(int dx, int dy)
@@ -42,6 +35,15 @@ namespace PacMan.Classes
 
             Player.CurrentXPosition += dx;
             Player.CurrentYPosition += dy;
+        }
+
+        private void AddPointsToPlayer(int xPos, int yPos)
+        {
+            if(GameField[xPos,yPos].Type == FieldType.Pellet || GameField[xPos,yPos].Type == FieldType.PowerPellet)
+            {
+                Player.AddScore(GameField[xPos, yPos].Points);
+                GameField[xPos, yPos] = new Field(FieldType.Empty, 0);
+            }
         }
 
         private bool CheckIfWall(int newXPos, int newYPos) => GameField[newXPos, newYPos].Type == FieldType.Wall;

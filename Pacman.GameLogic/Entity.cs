@@ -11,6 +11,7 @@ namespace Pacman.GameLogic
         public Entity(int x, int y)
         {
             ValidatePosition(x, y);
+
             CurrentXPosition = x;
             CurrentYPosition = y;
         }

@@ -13,13 +13,17 @@ namespace PacMan.Classes
         public int Lives { get; private set; } = 5;
         public int CurrentLevel { get; private set; } = 1;
         public bool HasPowerUp { get; set; } = false;
-        public Direction lastDirection { get; set; } = Direction.None;
+        public Direction Direction { get; set; } = Direction.None;
 
         public Player(int xStartPos, int yStartPos, int Lives) : base(xStartPos, yStartPos) { 
             ValidateLives(Lives);
             this.Lives = Lives;
         }
 
+        public void AddScore(int points)
+        {
+            Score += points;
+        }
         #region Error Handling
         private void ValidateLives(int lives)
         {
