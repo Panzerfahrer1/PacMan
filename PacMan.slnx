@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Pacman.GameLogic/Pacman.GameLogic.csproj" />
+  <Project Path="PacMan/PacMan.csproj" />
+</Solution>
