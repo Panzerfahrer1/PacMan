@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Pacman.GameLogic;
 
 namespace PacMan.Classes
 {
@@ -15,13 +10,55 @@ namespace PacMan.Classes
         public GameManager(Field[,] gameField, int ghostAmount, Player player)
         {
             ValidatePlayer(player);
-            ValidatePlayerPosition();
-
             GameField = gameField;
             ValidateGameField();
+            ValidatePlayerPosition();
             Player = player;
         }
 
+        public void MovePlayer(Direction inputDirection)
+        {
+            if(inputDirection == Direction.None)
+            {
+                inputDirection = Player.lastDirection;
+            }
+            else
+            {
+                Player.lastDirection = inputDirection;
+            }
+
+            var (dx, dy) = GetMovement(inputDirection);
+            MovePlayer(dx, dy);
+        }
+
+        private void MovePlayer(int dx, int dy)
+        {
+            ValidatePlayerPosition(dx, dy);
+
+            if (CheckIfWall(Player.CurrentXPosition + dx, Player.CurrentYPosition + dy))
+            {
+                return;
+            }
+
+            Player.CurrentXPosition += dx;
+            Player.CurrentYPosition += dy;
+        }
+
+        private bool CheckIfWall(int newXPos, int newYPos) => GameField[newXPos, newYPos].Type == FieldType.Wall;
+
+        private (int dx, int dy) GetMovement(Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.Up: return (0, -1);
+                case Direction.Down: return (0, 1);
+                case Direction.Left: return (-1, 0);
+                case Direction.Right: return (1, 0);
+                default: return (0, 0);
+            }
+        }
+
+        #region Error Handling
         private void ValidateGameField()
         {
             if (GameField == null || GameField.GetLength(0) == 0 || GameField.GetLength(1) == 0)
@@ -38,16 +75,18 @@ namespace PacMan.Classes
             }
         }   
 
-        private void ValidatePlayerPosition()
+        private void ValidatePlayerPosition(int dx = 0, int dy = 0)
         {
             int xPos = Player.CurrentXPosition;
             int yPos = Player.CurrentYPosition;
 
             // The check against negative values is redundant with the one in Entity class. Maybe remove one of them. IDK
-            if (xPos < 0 || xPos >= GameField.GetLength(0) || yPos < 0 || yPos >= GameField.GetLength(1))
+            if (xPos + dx < 0 || xPos + dx >= GameField.GetLength(0) || yPos + dy < 0 || yPos + dy >= GameField.GetLength(1))
             {
                 throw new ArgumentOutOfRangeException("Player position is out of game field bounds");
             }
         }
+
+        #endregion Error Handling
     }
 }
