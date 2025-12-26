@@ -48,7 +48,7 @@ namespace PacMan.Classes
 
         private bool CheckIfWall(int newXPos, int newYPos) => GameField[newXPos, newYPos].Type == FieldType.Wall;
 
-        private (int dx, int dy) GetMovement(Direction dir)
+        public static (int dx, int dy) GetMovement(Direction dir)
         {
             switch (dir)
             {

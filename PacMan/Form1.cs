@@ -1,6 +1,8 @@
 using Pacman.GameLogic;
+using Pacman.Rendering;
 using PacMan.Classes;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Pacman
 {
@@ -14,22 +16,52 @@ namespace Pacman
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Graphics graphics = this.CreateGraphics();
+            List<Point> points = new List<Point>()
+            {
+                new Point(50, 50),
+                new Point(150, 50),
+                new Point(150, 150),
+                new Point(50, 150)
+            };
+
+            GameObject gameObject = new GameObject(graphics, Color.Yellow, points);
+
             Field[,] gameField = InitGameField();
 
             Player player = new Player(5, 5, 5);
             GameManager gameManager = new GameManager(gameField, 10, player);
 
-            player.Direction = Direction.Down;
-
-            for (int i = 0; i < 10; i++)
+            //This loop should be the main update loop of the game
+            while (true)
             {
-                //gameManager.Update();
+                player.Direction = Direction.Down;
+
+                for (int i = 0; i < 100; i++)
+                {
+                    (int x, int y) = GameManager.GetMovement(player.Direction);
+                    // Move the player accordint to the direction updated in the game logic
+                    // 50 is the speed factor here to make the movement visible
+                    // And Sleep(500) to slow down the loop for demonstration purposes
+                    gameObject.MoveShape(50 * 1, 50 * y, true);
+                    // Update game logic
+                    gameManager.Update();
+                    System.Threading.Thread.Sleep(500);
+                }
             }
-
-            MessageBox.Show($"Player new position");
-
-            InitializeGameFieldUI(gameManager);
         }
+
+
+
+
+
+
+
+
 
         private Field[,] InitGameField()
         {
@@ -49,61 +81,6 @@ namespace Pacman
                 }
             }
             return gameField;
-        }
-
-        private void InitializeGameFieldUI(GameManager game)
-        {
-            var gameFieldPanel = new TableLayoutPanel
-            {
-                Name = "gameFieldPanel",
-                RowCount = game.GameField.GetLength(1),
-                ColumnCount = game.GameField.GetLength(0),
-                Dock = DockStyle.Fill,
-                BackColor = Color.DarkGray,
-                Margin = Padding.Empty,
-                Padding = Padding.Empty
-            };
-
-            gameFieldPanel.SuspendLayout();
-            gameFieldPanel.RowStyles.Clear();
-            gameFieldPanel.ColumnStyles.Clear();
-
-            // Wichtig: Prozent-Styles, sonst können Rows/Cols 0 groß sein
-            for (int y = 0; y < gameFieldPanel.RowCount; y++)
-                gameFieldPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / gameFieldPanel.RowCount));
-
-            for (int x = 0; x < gameFieldPanel.ColumnCount; x++)
-                gameFieldPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / gameFieldPanel.ColumnCount));
-
-            for (int y = 0; y < gameFieldPanel.RowCount; y++)
-            {
-                for (int x = 0; x < gameFieldPanel.ColumnCount; x++)
-                {
-                    Image img = null;
-                    if(game.GameField[x, y].Type == FieldType.Pellet)
-                    {
-                        img = Image.FromFile(@"C:/Users/olive/Downloads/ER5hyI3W4AwxGEG.png");
-                    }
-
-                    var panel = GameRenderer.CreatePictureBox(
-                        x,
-                        y,
-                        //game.GameField[x, y].Type == FieldType.Wall ? Color.Blue : Color.Black,
-                        img
-                    );
-
-                    gameFieldPanel.Controls.Add(panel, x, y);
-                }
-            }
-
-            // ALTES entfernen, falls du es mehrfach aufrufst
-            var old = this.Controls["gameFieldPanel"];
-            if (old != null) this.Controls.Remove(old);
-
-            this.Controls.Add(gameFieldPanel); // <-- DAS hast du vergessen
-            gameFieldPanel.BringToFront();
-
-            gameFieldPanel.ResumeLayout();
         }
 
     }
